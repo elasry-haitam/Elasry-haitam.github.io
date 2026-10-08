@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports Insights: Multivariate Modeling and PCA : Haitam Elasry</title>
+  <meta name="description" content="Applied Machine Learning and Statistical Analysis: Modeling athletic performance determinants using ANOVA, hypothesis testing, and PCA.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23161b22'/><text x='50' y='64' font-size='44' font-family='monospace' font-weight='700' fill='%23e6edf3' text-anchor='middle'>HE</text></svg>">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header / Nav -->
+    <header>
+      <div class="identity">
+        <h1>Haitam Elasry</h1>
+        <div class="role">AI and ML Engineer • Complex Systems</div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">Mode</button>
+      </div>
+    </header>
+
+    <nav class="site-nav">
+      <a href="index.html">← Back to Overview</a>
+      <a href="sales-companion.html">View Sales Companion Case Study</a>
+    </nav>
+
+    <!-- Article Body -->
+    <article>
+
+      <div class="article-header">
+        <h1 class="article-title">Sports Insights: Multivariate Statistical Modeling and Principal Component Analysis</h1>
+        <div class="article-subtitle">
+          Uncovering physical and training determinants of athletic performance across sports disciplines using parametric hypothesis testing, ANOVA, and PCA dimensionality reduction.
+        </div>
+
+        <div class="article-meta-grid">
+          <div class="article-meta-item">
+            <div class="meta-label">Domain</div>
+            <div class="meta-value">Applied Machine Learning / Statistics</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Methodology</div>
+            <div class="meta-value">ANOVA, t-Tests, PCA, EDA</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Tech Stack</div>
+            <div class="meta-value">Python, Scikit-Learn, Pandas, SciPy</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Cumulative Variance</div>
+            <div class="meta-value">>70% across 2 Components</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Metrics Strip -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-number">>70%</div>
+          <div class="metric-label">Total variance captured by first 2 principal components</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">p &lt; 0.001</div>
+          <div class="metric-label">ANOVA significance confirming discipline effect</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">r = +0.68</div>
+          <div class="metric-label">Linear correlation between training volume and score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">3 Groups</div>
+          <div class="metric-label">Athletic disciplines analyzed (Track, Cycling, Swimming)</div>
+        </div>
+      </div>
+
+      <!-- Section 1 -->
+      <section>
+        <h2 class="section-title">01. Problem Framing and Dataset Structure</h2>
+        <p>
+          In quantitative sports science and performance modeling, identifying which physical attributes directly govern athletic success is frequently confounded by multi-collinearity. Physical traits (height, weight, body mass index) interact with physiological training volume in discipline-specific ways.
+        </p>
+        <p>
+          This study models the empirical relationships across a structured cohort of competitive athletes spanning three distinct sporting categories: <strong>Athletics (Track and Field)</strong>, <strong>Cycling</strong>, and <strong>Swimming</strong>.
+        </p>
+        <p>
+          The feature space encompasses both physiological traits and continuous behavioral variables:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Morphological Variables:</strong> Age (years), Height (cm), Weight (kg), and derived Body Mass Index (BMI).
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Training Load:</strong> Average weekly training commitment (hours/week).
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Composite Performance Score:</strong> Standardized continuous index representing competitive output.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Categorical Discipline:</strong> Target grouping variable distinguishing biomechanical requirements.
+          </li>
+        </ul>
+      </section>
+
+      <!-- Section 2 -->
+      <section>
+        <h2 class="section-title">02. Univariate Distribution and Statistical Moments</h2>
+        <p>
+          Before applying multivariate decomposition, every continuous feature was systematically characterized through its distribution moments:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Central Tendency</th>
+                <th>Dispersion</th>
+                <th>Skewness and Kurtosis Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Age</strong></td>
+                <td>Mean: 26.4 years</td>
+                <td>Std: 4.8 years</td>
+                <td>Near-symmetric profile (Skewness ≈ 0.12). Typical prime athletic window across competitive cohorts.</td>
+              </tr>
+              <tr>
+                <td><strong>Height and Weight</strong></td>
+                <td>Discipline-dependent</td>
+                <td>Normal spread</td>
+                <td>Gaussian characteristics (Kurtosis ≈ 2.85). Demonstrates expected natural biological variance.</td>
+              </tr>
+              <tr>
+                <td><strong>Weekly Training</strong></td>
+                <td>Mean: 13.2 h/week</td>
+                <td>Std: 5.1 hours</td>
+                <td>Positive right-skew (Skewness ≈ 0.84). A subset of ultra-high-volume athletes logs in excess of 22h/week.</td>
+              </tr>
+              <tr>
+                <td><strong>Performance Score</strong></td>
+                <td>Mean: 71.5 / 100</td>
+                <td>Std: 14.2 pts</td>
+                <td>Heavy right tail (Kurtosis > 3.4). Reflects power-law dynamics typical of elite competitive athletic scores.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          <strong>Outlier Auditing:</strong> Using Tukey interquartile range (IQR = Q3 - Q1) boxplot filters, observations exceeding 1.5 × IQR in training hours were audited. Rather than treating high training volumes as measurement noise, domain evaluation confirmed them as elite-level competitive regimens, retaining them to preserve true variance in downstream modeling.
+        </p>
+      </section>
+
+      <!-- Section 3 -->
+      <section>
+        <h2 class="section-title">03. Bivariate Relationships and Parametric Hypothesis Testing</h2>
+        <p>
+          To evaluate how physical attributes and training investments dictate performance, we applied both linear correlation metrics and formal parametric hypothesis testing:
+        </p>
+
+        <div class="callout">
+          <h4>Correlation Matrix Findings (Pearson r)</h4>
+          <p>
+            Weekly training volume exhibited the strongest positive linear association with performance score (r = +0.68, p &lt; 0.001). Conversely, raw morphological metrics (Height and Weight) displayed moderate to weak direct bivariate correlations when evaluated over the aggregate pool, indicating that morphology alone cannot linearly predict performance without conditioning on discipline.
+          </p>
+        </div>
+
+        <p>
+          <strong>Independent Two-Sample t-Tests:</strong>
+          Pairwise student t-tests were conducted between discipline subsets (e.g., Track vs. Cycling). Athletes in cycling demonstrated statistically significant lower mean body mass compared to track competitors (t = 4.12, p &lt; 0.001), reflecting the biomechanical demand for favorable power-to-weight ratios in sustained climbing and endurance.
+        </p>
+
+        <p>
+          <strong>One-Way Analysis of Variance (ANOVA):</strong>
+          To determine whether the categorical discipline variable fundamentally moderates performance distributions, a One-Way ANOVA was formulated:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.4rem;">
+            <strong>Null Hypothesis (H0):</strong> Mean performance scores across disciplines are equal (μ_Track = μ_Cycling = μ_Swimming).
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.4rem;">
+            <strong>Alternative Hypothesis (H1):</strong> At least one discipline displays a significantly different mean performance index.
+          </li>
+        </ul>
+        <p>
+          The resulting test yielded an <strong>F-statistic of 18.64 (p &lt; 0.0001)</strong>, decisively rejecting the null hypothesis and establishing that athletic discipline is a mandatory conditioning factor in performance modeling.
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section>
+        <h2 class="section-title">04. Dimensionality Reduction via Principal Component Analysis (PCA)</h2>
+        <p>
+          Because morphological variables (Height, Weight, BMI) display significant collinearity, fitting standard regression models directly on raw attributes leads to variance inflation and unstable coefficients.
+        </p>
+        <p>
+          To resolve this, we implemented <strong>Principal Component Analysis (PCA)</strong> to project the multi-dimensional feature space onto orthogonal latent axes:
+        </p>
+
+        <ol>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Z-Score Feature Standardization:</strong> Each numerical dimension was scaled to zero mean and unit variance (μ = 0, σ² = 1). This ensures that large-scale variables (e.g., Height in cm) do not artificially dominate the covariance matrix over variables with smaller numerical scales (e.g., Training hours).
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Eigenvalue Decomposition and Scree Analysis:</strong> Computing the covariance matrix and its associated eigenvectors revealed that the first two principal components account for <strong>71.8% of total cumulative variance</strong>.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Factorial Projection and Cluster Separation:</strong> Projecting each athlete's profile onto the primary factorial plane (PC1 vs. PC2) revealed clear, non-overlapping geometric clusters corresponding to their sporting disciplines.
+          </li>
+        </ol>
+
+        <!-- Clean Monochrome Component Breakdown Card -->
+        <div style="margin: 1.75rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.8rem;">
+          <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem;">
+            Latent Component Decomposition
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 1rem; border-radius: 6px;">
+              <div style="font-weight: 700; color: var(--text);">PC1 : Biomechanical Morphology Axis</div>
+              <div style="color: var(--text-dim); font-size: 0.75rem; margin-top: 0.2rem;">Captures 44.2% of cumulative variance</div>
+              <div style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.5rem; line-height: 1.5;">
+                Heavily loaded by Height (+0.62) and Weight (+0.59). Discriminated tall, power-oriented track athletes from lightweight endurance cyclists.
+              </div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 1rem; border-radius: 6px;">
+              <div style="font-weight: 700; color: var(--text);">PC2 : Physiological Commitment Axis</div>
+              <div style="color: var(--text-dim); font-size: 0.75rem; margin-top: 0.2rem;">Captures 27.6% of cumulative variance</div>
+              <div style="color: var(--text-muted); font-size: 0.78rem; margin-top: 0.5rem; line-height: 1.5;">
+                Heavily loaded by Weekly Training Hours (+0.66) and Composite Score (+0.61). Represents training devotion and competitive output.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5 -->
+      <section>
+        <h2 class="section-title">05. Python Pipeline Implementation</h2>
+        <p>
+          The complete data processing, hypothesis testing, and PCA pipeline was built using Python, Scikit-Learn, and SciPy:
+        </p>
+
+        <pre><code>import numpy as np
+import pandas as pd
+from scipy import stats
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# 1. Ingestion and Feature Scaling
+features = ['age', 'height_cm', 'weight_kg', 'training_hours', 'score']
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df[features])
+
+# 2. Parametric Hypothesis Testing (ANOVA across disciplines)
+disciplines = df['sport_type'].unique()
+group_scores = [df[df['sport_type'] == d]['score'] for d in disciplines]
+f_stat, p_val = stats.f_oneway(*group_scores)
+print(f"One-Way ANOVA: F = {f_stat:.2f}, p-value = {p_val:.4e}")
+
+# 3. Principal Component Analysis
+pca = PCA(n_components=2)
+principal_components = pca.fit_transform(X_scaled)
+
+explained_var = pca.explained_variance_ratio_
+print(f"PC1 Variance: {explained_var[0]*100:.1f}%")
+print(f"PC2 Variance: {explained_var[1]*100:.1f}%")
+print(f"Total Cumulative Variance: {np.sum(explained_var)*100:.1f}%")</code></pre>
+      </section>
+
+      <!-- Section 6 -->
+      <section>
+        <h2 class="section-title">06. Engineering and Machine Learning Takeaways</h2>
+        <div class="callout">
+          <h4>1. Collinearity Elimination for Downstream Models</h4>
+          <p>
+            Projecting correlated morphological features into orthogonal principal components ensures that downstream linear models (or gradient boosting estimators) avoid variance inflation and achieve stable feature attribution.
+          </p>
+        </div>
+        <div class="callout">
+          <h4>2. Rigorous Statistical Grounding Precedes Modeling</h4>
+          <p>
+            Machine learning practitioners frequently jump directly to deep architectures without verifying foundational data properties. Conducting distributional moment testing (skewness, kurtosis) and parametric hypothesis tests (ANOVA) prevents flawed modeling assumptions.
+          </p>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <a href="index.html">← Back to Overview</a>
+      </div>
+      <div>
+        <span>Sports Insights : Applied Machine Learning and Statistical Analysis Portfolio Project.</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const themeBtn = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else if (!prefersDark) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Companion: Enterprise Multi-Agent Architecture : Haitam Elasry</title>
+  <meta name="description" content="Technical Case Study: Engineering a zero-dependency, local-first multi-agent AI system for enterprise sales enablement at Allianz Partners.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23161b22'/><text x='50' y='64' font-size='44' font-family='monospace' font-weight='700' fill='%23e6edf3' text-anchor='middle'>HE</text></svg>">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header / Nav -->
+    <header>
+      <div class="identity">
+        <h1>Haitam Elasry</h1>
+        <div class="role">AI and ML Engineer • Complex Systems</div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">Mode</button>
+      </div>
+    </header>
+
+    <nav class="site-nav">
+      <a href="index.html">← Back to Overview</a>
+      <a href="index.html#projects">All Projects</a>
+    </nav>
+
+    <!-- Article Body -->
+    <article>
+
+      <div class="article-header">
+        <h1 class="article-title">Sales Companion: Architecting an Autonomous, Local-First Multi-Agent System for Enterprise Sales Enablement</h1>
+        <div class="article-subtitle">
+          How strict enterprise constraints (zero server overhead, zero external API keys, non-hallucination mandates) led to a declarative 10-skill orchestrator that cut RFP turnaround from 12 hours to 15 minutes.
+        </div>
+
+        <div class="article-meta-grid">
+          <div class="article-meta-item">
+            <div class="meta-label">Organization</div>
+            <div class="meta-value">Allianz Partners</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Domain</div>
+            <div class="meta-value">Enterprise Generative AI / RAG</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Role</div>
+            <div class="meta-value">Lead AI Engineer (MSc Thesis)</div>
+          </div>
+          <div class="article-meta-item">
+            <div class="meta-label">Timeline</div>
+            <div class="meta-value">Mar 2026 to Aug 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Metrics Strip -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-number">12h to 15m</div>
+          <div class="metric-label">Tender response processing turnaround</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">238</div>
+          <div class="metric-label">Validated market events tracked across 6 competitors</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">97/100</div>
+          <div class="metric-label">Automated presentation visual and content score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-number">€2.0M to €2.5M</div>
+          <div class="metric-label">Annualized productivity value (estimated)</div>
+        </div>
+      </div>
+
+      <!-- Section 1 -->
+      <section>
+        <h2 class="section-title">01. The Problem and Operational Friction</h2>
+        <p>
+          At Allianz Partners (operating in 75+ countries with 22,600+ employees), commercial sales teams routinely handle multi-million euro Requests for Proposals (RFPs) and complex partner tenders. Historically, assembling a single RFP dossier consumed <strong>8 to 12 hours of manual labor per document</strong>.
+        </p>
+        <p>
+          Account managers had to manually comb through hundreds of fragmented presentations, legal policy wordings, and regional SLA guidelines scattered across SharePoint. Beyond pure operational latency, this created three structural bottlenecks:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Knowledge Drift and Stale Claims:</strong> Sales teams often relied on outdated local copies of pitch decks, pitching retired coverage models, superseded SLA commitments, or inconsistent commercial pricing structures.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Contractual Liability and Hallucination Risk:</strong> In B2B insurance and assistance contracts, submitting an unverified commitment in an RFP response legally binds the enterprise. Standard conversational LLMs tend to generate fluent but speculative promises when confronted with ambiguous edge cases.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>The Enterprise Adoption Ceiling:</strong> Prior centralized AI initiatives reached fewer than 3% active adoption across the sales community. The friction was operational: mandatory single-sign-on web portals disconnected from local files, rigid IT installation barriers, and network latencies when uploading large confidential tenders.
+          </li>
+        </ul>
+        <p>
+          <strong>The Objective:</strong> Deliver an autonomous, local-first system capable of answering technical queries, drafting complete RFP responses, composing branded executive presentations, and tracking market intelligence, while operating strictly within verified internal sources and requiring zero external server infrastructure.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section>
+        <h2 class="section-title">02. Hard Enterprise Constraints</h2>
+        <p>
+          Most academic and open-source agent frameworks assume a frictionless greenfield environment: managed cloud containers, remote vector databases, and unbounded external API access. In an enterprise operating under strict data governance, this paradigm fails immediately.
+        </p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Constraint</th>
+                <th>Enterprise Reality</th>
+                <th>Architectural Decision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Zero Server Overhead</strong></td>
+                <td>Deploying dedicated cloud containers, Linux VMs, or managed databases (Pinecone, Chroma) requires multi-month security audits and ongoing infrastructure maintenance.</td>
+                <td>Designed as a <strong>local-first architecture</strong> running on standard corporate Windows workstations via a lightweight native PowerShell HTTP server and static web GUI, requiring zero administrative privileges.</td>
+              </tr>
+              <tr>
+                <td><strong>Zero Variable API Keys</strong></td>
+                <td>Pay-as-you-go API keys create unpredictable cost spikes, variable budget governance friction, and credential storage security risks across dozens of sales workstations.</td>
+                <td>Built on top of the corporate <strong>Claude Code CLI runtime</strong>, invoking local processes (`claude -p`) under existing enterprise seat licenses with zero variable cloud billing.</td>
+              </tr>
+              <tr>
+                <td><strong>Strict Provenance and Non-Hallucination</strong></td>
+                <td>Purely synthetic generation is inadmissible in compliance-critical commercial proposals. Merging regional scopes (e.g., applying German SLAs to a UK contract) is strictly prohibited.</td>
+                <td><strong>Deterministic Provenance Engine:</strong> Every single factual assertion requires an exact file-path lineage, search depth indicator, and deterministic confidence rating. Speculation is blocked at the system prompt level.</td>
+              </tr>
+              <tr>
+                <td><strong>Windows Workstation Hardening</strong></td>
+                <td>Diverse corporate laptop configurations introduce file locks (OneDrive sync races), `MAX_PATH` 260-character path limits, and character encoding mismatches (Windows-1252 vs. UTF-8).</td>
+                <td>Engineered low-level process tree termination (`taskkill /T /F`), sentinel-based crash recovery, custom path sanitizers, and non-blocking asynchronous coroutine timeouts.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section>
+        <h2 class="section-title">03. High-Level Architecture and Intent Routing</h2>
+        <p>
+          Rather than building a chaotic swarm of conversational sub-agents communicating through unconstrained message passing (which introduces high latency, compounding token costs, and non-deterministic state loops), Sales Companion utilizes a <strong>Hierarchical Orchestrator-Skill Pattern</strong>:
+        </p>
+
+        <!-- Modern Vector Architecture Diagram -->
+        <div style="margin: 2rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center;">
+          <svg viewBox="0 0 740 380" width="100%" height="auto" style="max-width: 740px; font-family: var(--font-mono); font-size: 11px;">
+            <!-- Background subtle container -->
+            <rect x="10" y="10" width="720" height="360" rx="8" fill="var(--bg-subtle)" stroke="var(--border-subtle)" stroke-width="1" />
+            
+            <!-- Tier 1: Client / Entry -->
+            <rect x="230" y="25" width="280" height="38" rx="6" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1.5" />
+            <text x="370" y="48" fill="var(--text)" text-anchor="middle" font-weight="600">Enterprise Sales User / Document Input</text>
+            
+            <!-- Arrow down -->
+            <path d="M370 63 L370 85" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="3,3" />
+            <polygon points="370,88 366,80 374,80" fill="var(--text-dim)" />
+            
+            <!-- Tier 2: PowerShell Local Server -->
+            <rect x="210" y="90" width="320" height="38" rx="6" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1.5" />
+            <text x="370" y="113" fill="var(--text)" text-anchor="middle" font-weight="600">Local PowerShell HTTP Server (server.ps1)</text>
+            <text x="370" y="124" fill="var(--text-muted)" text-anchor="middle" font-size="9">Zero-install local host • No administrative privileges</text>
+
+            <!-- Arrow down -->
+            <path d="M370 128 L370 148" stroke="var(--text-dim)" stroke-width="1.5" />
+            <polygon points="370,152 366,144 374,144" fill="var(--text-dim)" />
+
+            <!-- Tier 3: Root Orchestrator -->
+            <rect x="170" y="154" width="400" height="42" rx="6" fill="var(--bg-card)" stroke="var(--highlight-border)" stroke-width="1.5" />
+            <text x="370" y="174" fill="var(--link)" text-anchor="middle" font-weight="700" font-size="12">Root Orchestrator (CLAUDE.md)</text>
+            <text x="370" y="188" fill="var(--text-muted)" text-anchor="middle" font-size="10">Intent Classification • Strict Safety Gates • Single-Session Context</text>
+
+            <!-- Branching paths to skills -->
+            <path d="M370 196 L370 215" stroke="var(--text-dim)" stroke-width="1.5" />
+            <path d="M100 215 L640 215" stroke="var(--text-dim)" stroke-width="1.5" />
+            
+            <path d="M100 215 L100 230" stroke="var(--text-dim)" stroke-width="1.5" />
+            <path d="M235 215 L235 230" stroke="var(--text-dim)" stroke-width="1.5" />
+            <path d="M370 215 L370 230" stroke="var(--text-dim)" stroke-width="1.5" />
+            <path d="M505 215 L505 230" stroke="var(--text-dim)" stroke-width="1.5" />
+            <path d="M640 215 L640 230" stroke="var(--text-dim)" stroke-width="1.5" />
+
+            <!-- Skills Cards -->
+            <rect x="35" y="232" width="130" height="54" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1" />
+            <text x="100" y="252" fill="var(--text)" text-anchor="middle" font-weight="600">qa.md</text>
+            <text x="100" y="266" fill="var(--text-muted)" text-anchor="middle" font-size="9">Tiered Sourcing</text>
+            <text x="100" y="278" fill="var(--text-dim)" text-anchor="middle" font-size="8">Find/Explain/Advice</text>
+
+            <rect x="170" y="232" width="130" height="54" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1" />
+            <text x="235" y="252" fill="var(--text)" text-anchor="middle" font-weight="600">rfp.md</text>
+            <text x="235" y="266" fill="var(--text-muted)" text-anchor="middle" font-size="9">Two-Pass Mode</text>
+            <text x="235" y="278" fill="var(--text-dim)" text-anchor="middle" font-size="8">Docx / Table Inject</text>
+
+            <rect x="305" y="232" width="130" height="54" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1" />
+            <text x="370" y="252" fill="var(--text)" text-anchor="middle" font-weight="600">presentation.md</text>
+            <text x="370" y="266" fill="var(--text-muted)" text-anchor="middle" font-size="9">Declarative JSON</text>
+            <text x="370" y="278" fill="var(--text-dim)" text-anchor="middle" font-size="8">3-Judge Quality Loop</text>
+
+            <rect x="440" y="232" width="130" height="54" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1" />
+            <text x="505" y="252" fill="var(--text)" text-anchor="middle" font-weight="600">competitive-intel.md</text>
+            <text x="505" y="266" fill="var(--text-muted)" text-anchor="middle" font-size="9">Market Monitor</text>
+            <text x="505" y="278" fill="var(--text-dim)" text-anchor="middle" font-size="8">Haiku/Sonnet Cascade</text>
+
+            <rect x="575" y="232" width="130" height="54" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1" />
+            <text x="640" y="252" fill="var(--text)" text-anchor="middle" font-weight="600">decision-tree.md</text>
+            <text x="640" y="266" fill="var(--text-muted)" text-anchor="middle" font-size="9">Solutioning</text>
+            <text x="640" y="278" fill="var(--text-dim)" text-anchor="middle" font-size="8">SEG Governance</text>
+
+            <!-- Bottom Tier: Execution Engine -->
+            <path d="M370 288 L370 305" stroke="var(--text-dim)" stroke-width="1.5" />
+            <polygon points="370,308 366,300 374,300" fill="var(--text-dim)" />
+
+            <rect x="130" y="310" width="480" height="42" rx="6" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1.5" />
+            <text x="370" y="328" fill="var(--text)" text-anchor="middle" font-weight="600">Deterministic Execution Layer (Python Scripts + Local Storage)</text>
+            <text x="370" y="342" fill="var(--text-muted)" text-anchor="middle" font-size="9.5">document_library.jsonl • python-docx • python-pptx COM • SHA-256 Dedup • 9 Golden Datasets</text>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+            Figure 1: Hierarchical Orchestrator and Inline Skill Architecture
+          </div>
+        </div>
+
+        <div class="callout">
+          <h4>Why Markdown Skills over Framework Agents?</h4>
+          <p>
+            Skills are structured instruction files written in declarative Markdown inside <code>skills/</code> (covering QA, RFP Q&A, Narrative Proposals, Meeting Prep, Presentations, Research, Competitive Intelligence, and Solutioning). They are loaded directly into the orchestrator's context upon intent detection without spawning separate operating system processes.
+          </p>
+          <p>
+            This design eliminates inter-process latency and serialization overhead. Furthermore, because skills are human-readable Markdown, commercial stakeholders and legal compliance officers can review and audit the AI's decision boundaries directly in Git without deciphering Python code.
+          </p>
+        </div>
+
+        <p>
+          <strong>Sub-Agent Boundary:</strong> When a task requires genuine isolation or heavy non-blocking compute (such as extracting structured metadata across hundreds of new documents during library indexing), the orchestrator dispatches a dedicated child agent (<code>index-subagent</code>) running as a distinct background subprocess with its own localized memory space.
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section>
+        <h2 class="section-title">04. Engineering Deep Dives and Trade-Offs</h2>
+
+        <h3>Deep Dive A: Tiered Retrieval : Why Flat JSONL Beat Vector DBs</h3>
+        <p>
+          Conventional generative AI literature recommends ingesting all corpus documents into a vector database (such as Pinecone, Qdrant, or Chroma) and querying via cosine similarity on dense embeddings. In our enterprise testing, pure vector retrieval exhibited critical failure modes:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Semantic Collisions:</strong> Dense embeddings frequently struggled to distinguish between subtle territorial differences. Two assistance policies from Germany and Switzerland often share 98% lexical similarity while differing on a single crucial geographic exclusion clause.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Operational Overhead:</strong> Running an external vector database container violated the zero-dependency enterprise workstation constraint.
+          </li>
+        </ul>
+        <p>
+          <strong>The Engineered Solution: A Two-Tier Retrieval Architecture</strong>
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Tier 1 (Instant Metadata Filter):</strong> All ~314 verified internal documents are indexed into a local, compact <code>document_library.jsonl</code> file. Each entry contains structured metadata: primary intent, keywords, line of business, target market, client industry, and high-level summaries. The orchestrator queries this manifest in a single deterministic pass.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Tier 2 (Normalized Full-Text Retrieval):</strong> When deep technical substance is required, the engine navigates directly to normalized, clean Markdown files via explicit <code>md_path</code> pointers. Raw source documents (.pptx, .docx, .pdf) are normalized offline once, guaranteeing deterministic text extraction.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Strict Scope Discipline:</strong> Enforced hard rules prohibiting the LLM from merging geographic scopes. Facts from distinct sources retain their individual boundary tags. Every output concludes with an auditable block: Source file, Search Depth (JSONL vs. MD read), and Confidence Level (High, Partial, Low).
+          </li>
+        </ul>
+
+        <!-- Clean CSS Tiered Retrieval Pipeline Card -->
+        <div style="margin: 1.75rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; font-family: var(--font-mono); font-size: 0.82rem;">
+          <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem; text-align: center;">
+            Two-Tier Retrieval Architecture (Fast Metadata Filter to Normalized Full-Text)
+          </div>
+
+          <!-- Step 1: Input -->
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.65rem 1rem; border-radius: 6px; text-align: center; font-weight: 600; color: var(--text); max-width: 380px; margin: 0 auto;">
+            Incoming Technical Query / RFP Topic
+          </div>
+
+          <div style="text-align: center; color: var(--text-dim); margin: 0.4rem 0; font-size: 0.85rem;">↓</div>
+
+          <!-- Step 2: Tier 1 Manifest -->
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.85rem 1rem; border-radius: 6px; text-align: center;">
+            <div style="font-weight: 700; color: var(--text);">Tier 1 : Instant Metadata Manifest (document_library.jsonl)</div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Single-pass scan • Topic, LOB, and market scope filtering • Pre-indexed summaries</div>
+          </div>
+
+          <div style="text-align: center; color: var(--text-dim); margin: 0.4rem 0; font-size: 0.85rem;">↓</div>
+
+          <!-- Step 3: Branching Paths -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.85rem; border-radius: 6px;">
+              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Path A : Summary Sufficient</div>
+              <div style="font-weight: 600; color: var(--text); margin-top: 0.25rem;">Direct Answer Synthesis</div>
+              <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Extracts verified assertion with zero additional file-read overhead</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.85rem; border-radius: 6px;">
+              <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Path B : Deep Detail Required</div>
+              <div style="font-weight: 600; color: var(--text); margin-top: 0.25rem;">Tier 2 : Targeted Normalized Read</div>
+              <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Direct jump to full Markdown document via explicit md_path pointer</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; color: var(--text-dim); margin: 0.4rem 0; font-size: 0.85rem;">↓</div>
+
+          <!-- Step 4: Verification Output -->
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border); padding: 0.75rem 1rem; border-radius: 6px; text-align: center;">
+            <div style="font-weight: 600; color: var(--text);">Audit Block Attached to Response</div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Source File Lineage • Search Depth (JSONL vs. MD) • Deterministic Confidence Tier</div>
+          </div>
+        </div>
+
+        <h3>Deep Dive B: Two-Pass Document Processing for 50+ Question RFPs</h3>
+        <p>
+          Enterprise tenders frequently arrive as dense questionnaires spanning 50 to 150+ granular questions across technical capabilities, IT security, SLAs, and commercial governance. Feeding the entire tender into a single prompt causes severe context dilution, hallucination, and session timeouts.
+        </p>
+        <p>
+          To solve this, we architected a <strong>Two-Pass Pipeline</strong>:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Pass 1 (Research and Retrieval Mapping):</strong> The pipeline parses the document (.docx, .xlsx, or .pdf), decomposes the questionnaire into individual structured questions, and searches the indexed knowledge library. It produces a comprehensive <em>Research Map</em> pairing every question with its verified internal citations. No narrative answers are drafted at this stage.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Pass 2 (Bounded Section Generation and Assembly):</strong> A dedicated Python engine (<code>rfp_section_writer.py</code>) iterates through the research map section-by-section. It generates precise, sourced responses within bounded context windows, injecting them directly into the official corporate Word template using <code>python-docx</code> while preserving brand styles, typography, and table layouts.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.6rem;">
+            <strong>Strategic Proactive Suggestions Layer:</strong> Following answer generation, the engine executes a differential analysis against company differentiators. It surfaces up to 5 strategic value-adds that the prospect did not explicitly ask for but that strengthen the proposal. Each suggestion is grounded in internal case studies and highlighted in green for executive review.
+          </li>
+        </ul>
+        <p>
+          This two-pass design completely eliminated token timeouts and reduced end-to-end tender draft turnaround from <strong>8 to 12 hours to 13 to 23 minutes</strong>.
+        </p>
+
+        <h3>Deep Dive C: Declarative Presentation Engine and The 3-Judge Quality Loop</h3>
+        <p>
+          The earliest prototype attempted to have the LLM write arbitrary Python scripts using <code>python-pptx</code> to draw shapes and position text. This approach suffered from frequent syntax errors, overlapping text boxes, and inconsistent brand alignments.
+        </p>
+        <p>
+          We overhauled the engine to enforce a <strong>Strict Declarative Contract</strong>:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Content Generation:</strong> The LLM is restricted to generating a strictly validated JSON schema (<code>deck.json</code>) defining the narrative story flow, slide layout archetypes (hero, split-screen, grid, timeline), and textual proof points.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Deterministic Rendering:</strong> A Python rendering engine interprets the declarative schema, calculating pixel-perfect element coordinates, typography scales, brand colors, and icon alignments.
+          </li>
+        </ul>
+        <p>
+          To maintain quality across iterations, we implemented a <strong>3-Judge Evaluation Harness</strong>:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Judge 1 (Deterministic Heuristic):</strong> A 100-point deterministic checker evaluating structural density, character thresholds, margin compliance, and accessibility standards.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Judge 2 (Multimodal Vision Judge):</strong> Automatically converts rendered slides to high-resolution PNG images, feeding them to a vision model to evaluate visual balance, whitespace distribution, and aesthetic clarity.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Judge 3 (Content Judge):</strong> An LLM judge evaluating narrative coherence, client positioning, and persuasive rigor.
+          </li>
+        </ul>
+        <!-- 3-Judge Quality Matrix Visual Card -->
+        <div style="margin: 1.5rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;">
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Automated Evaluation : The 3-Judge Triad
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; font-family: var(--font-mono); font-size: 0.8rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.85rem;">
+              <div style="color: var(--link); font-weight: 600; margin-bottom: 0.25rem;">Judge 1 : Heuristics</div>
+              <div style="color: var(--text-dim); font-size: 0.75rem;">100-pt rule verification</div>
+              <div style="color: var(--text); margin-top: 0.4rem; font-size: 0.78rem;">Checks margin limits, text density, contrast, and layout accessibility.</div>
+            </div>
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.85rem;">
+              <div style="color: var(--link); font-weight: 600; margin-bottom: 0.25rem;">Judge 2 : Vision LLM</div>
+              <div style="color: var(--text-dim); font-size: 0.75rem;">Multimodal PNG render</div>
+              <div style="color: var(--text); margin-top: 0.4rem; font-size: 0.78rem;">Evaluates whitespace distribution, visual hierarchy, and balance.</div>
+            </div>
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0.85rem;">
+              <div style="color: var(--link); font-weight: 600; margin-bottom: 0.25rem;">Judge 3 : Narrative LLM</div>
+              <div style="color: var(--text-dim); font-size: 0.75rem;">Narrative flow review</div>
+              <div style="color: var(--text); margin-top: 0.4rem; font-size: 0.78rem;">Grades pitch narrative, proof point grounding, and tone.</div>
+            </div>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-family: var(--font-mono); font-size: 0.78rem;">
+            <span style="color: var(--text-muted);">Score Progression:</span>
+            <span style="color: var(--accent); font-weight: 600;">Initial Baseline: 80/100 ➔ Production Output: 97 to 98/100</span>
+          </div>
+        </div>
+
+        <h3>Deep Dive D: Autonomous Competitive Intelligence (Haiku / Sonnet Model Cascade)</h3>
+        <p>
+          To provide sales teams with real-time market positioning, we architected an automated competitive intelligence crawler monitoring 6 major European assistance competitors across 66 data sources (press portals, product releases, financial filings, review hubs).
+        </p>
+        <p>
+          Scraping dozens of dynamic web pages generates immense noise (cookie updates, navigational changes, marketing fluff). Routing all raw HTML to heavy frontier models would have been prohibitively expensive and slow.
+        </p>
+
+        <!-- Cascade Flow Architecture Card (Vertical Step Pipeline - Strictly Monochrome) -->
+        <div style="margin: 1.5rem 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: var(--font-mono); font-size: 0.8rem;">
+          <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem;">
+            Two-Tier Model Cascade Dataflow
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            
+            <!-- Step 1 -->
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="background: var(--bg-subtle); border: 1px solid var(--border); color: var(--text); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">01</span>
+              <div>
+                <div style="color: var(--text); font-weight: 600;">Ingestion : Playwright Async BFS Crawler</div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Monitors 66 public endpoints across 6 competitors • Dynamic rendering and page diffing</div>
+              </div>
+            </div>
+
+            <!-- Connector -->
+            <div style="padding-left: 1.25rem; color: var(--text-dim); font-size: 0.75rem; line-height: 1;">↓</div>
+
+            <!-- Step 2 -->
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="background: var(--bg-subtle); border: 1px solid var(--border); color: var(--text); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">02</span>
+              <div>
+                <div style="color: var(--text); font-weight: 600;">Relevance Triage : Claude 3 Haiku</div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">High-throughput zero-shot filtering • 99% of boilerplate noise and cookie diffs discarded</div>
+              </div>
+            </div>
+
+            <!-- Connector -->
+            <div style="padding-left: 1.25rem; color: var(--text-dim); font-size: 0.75rem; line-height: 1;">↓</div>
+
+            <!-- Step 3 -->
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="background: var(--bg-subtle); border: 1px solid var(--border); color: var(--text); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">03</span>
+              <div>
+                <div style="color: var(--text); font-weight: 600;">Structured Extraction : Claude 3.5 Sonnet</div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Invoked exclusively on verified market signals • Formats strategic events into strict JSON schemas</div>
+              </div>
+            </div>
+
+            <!-- Connector -->
+            <div style="padding-left: 1.25rem; color: var(--text-dim); font-size: 0.75rem; line-height: 1;">↓</div>
+
+            <!-- Step 4 -->
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="background: var(--bg-subtle); border: 1px solid var(--border); color: var(--text); padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; font-size: 0.75rem;">04</span>
+              <div>
+                <div style="color: var(--text); font-weight: 600;">Deduplication : SHA-256 Hashing & Jaccard Similarity (0.45)</div>
+                <div style="color: var(--text-muted); font-size: 0.75rem;">Eliminates duplicate syndicated press releases • Corroborates multi-source events into timeline</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <p>
+          We engineered an automated <strong>Two-Tier Model Cascade</strong>:
+        </p>
+        <ul>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Tier 1 (Claude 3 Haiku):</strong> High-throughput, zero-shot relevance triage and web page diffing. Discards 99% of boilerplate updates and flags only genuine strategic signals.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Tier 2 (Claude 3.5 Sonnet):</strong> Invoked exclusively on validated market signals to extract structured JSON entities: competitor entity, event category (M&A, OEM partnership, new product), confidence score, and strategic impact analysis.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Deduplication and Corroboration:</strong> Applied SHA-256 content hashing to eliminate identical articles across syndication feeds, paired with Jaccard similarity thresholding (0.45) for multi-source event corroboration.
+          </li>
+          <li style="margin-left: 1.5rem; margin-bottom: 0.5rem;">
+            <strong>Async Resilience:</strong> Integrated bounded coroutines (<code>asyncio.wait_for</code>) to isolate headless Playwright browser deadlocks, paired with explicit process tree termination to prevent zombie background processes on Windows.
+          </li>
+        </ul>
+        <p>
+          The pipeline tracked <strong>238 validated market events</strong> with a 15 to 25:1 call-to-event filtering ratio, operating completely autonomously for less than ~$30/month in total compute cost.
+        </p>
+      </section>
+
+      <!-- Section 5 -->
+      <section>
+        <h2 class="section-title">05. Production Impact and Business Outcomes</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Baseline</th>
+                <th>Sales Companion Result</th>
+                <th>Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RFP Processing Time</td>
+                <td>8 to 12 hours</td>
+                <td><strong>13 to 23 minutes</strong></td>
+                <td>~75% to 95% reduction</td>
+              </tr>
+              <tr>
+                <td>Verified Sourcing</td>
+                <td>Manual / Unaudited</td>
+                <td><strong>87% to 100% High Confidence</strong></td>
+                <td>Zero hallucinated commitments</td>
+              </tr>
+              <tr>
+                <td>Presentation Score</td>
+                <td>80 / 100</td>
+                <td><strong>97 to 98 / 100</strong></td>
+                <td>Production-ready decks</td>
+              </tr>
+              <tr>
+                <td>Competitive Events</td>
+                <td>0 automated</td>
+                <td><strong>238 validated events</strong></td>
+                <td>99% noise elimination</td>
+              </tr>
+              <tr>
+                <td>Business Valuation</td>
+                <td>—</td>
+                <td><strong>€2.0M to €2.5M / year (estimated)</strong></td>
+                <td>Strategic enablement and productivity model</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 6 -->
+      <section>
+        <h2 class="section-title">06. Key Engineering Lessons Learned</h2>
+        <div class="callout">
+          <h4>1. Declarative Schemas Beat Free Code Generation</h4>
+          <p>
+            Constraining generative models to produce strictly validated declarative data contracts (JSON or Markdown) rather than executable code eliminates 95% of runtime failures, prevents security escapes, and ensures deterministic layout execution.
+          </p>
+        </div>
+        <div class="callout">
+          <h4>2. Real-World Constraints Drive Superior Architecture</h4>
+          <p>
+            The mandate to run locally without server dependencies initially appeared restrictive. In practice, it led to a zero-maintenance, infinitely portable system that completely bypassed corporate IT procurement roadblocks and network latencies.
+          </p>
+        </div>
+        <div class="callout">
+          <h4>3. Automated Evaluation is an Essential Engineering Investment</h4>
+          <p>
+            Anyone can prompt an LLM; proving that a prompt adjustment or model update does not introduce subtle regressions requires golden benchmark datasets and multi-judge evaluation suites.
+          </p>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <a href="index.html">← Back to Overview</a>
+      </div>
+      <div>
+        <span><strong>Confidentiality Notice: Engineering architecture, design methodology, and systems rationale are shared in accordance with enterprise intellectual property guidelines. Proprietary client data, internal models, and confidential training materials have been strictly omitted.</strong></span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const themeBtn = document.getElementById('themeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else if (!prefersDark) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
+
+</body>
+</html>
